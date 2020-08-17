@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<!-- 配置生成器的完整配置属性见：http://www.mybatis.org/generator/configreference/xmlconfig.html -->
+<generatorConfiguration>
+    <!--
+    <properties>标签可选，用来指定外部属性元素，最多可配置1个或不配。
+    该标签有2个可选属性：
+        resource：属性指定classpath下的属性，如com/myproject/generatorConfig.properties
+         url：属性指定文件系统上特定位置的属性，如file://E://myfolder/generatorConfig.properties
+
+    注意：resource和url属性只能选一个，不能同时使用 。
+    配置样例：
+    <properties resource="generatorConfig.properties"/>
+    -->
+
+    <!--
+    <classPathEntry>标签，指定所使用的jar包，一般是数据库驱动。
+    该标签只有一个属性：
+        location：指定jar包的位置
+    -->
+    <classPathEntry
+            location="C:\Users\WX-User\.m2\repository\mysql\mysql-connector-java\5.1.48\mysql-connector-java-5.1.48.jar"/>
+
+    <!--
+    <context>标签，至少配置一个，可配置多个。
+    该标签有4个属性：
+        id：必选，用来唯一确定该标签
+        defaultModelType：这个属性很重要，定义MGB如何生成实体类，有以下可选值：
+            conditional：默认值，与hierarchical类似，如果一个表的主键只有一个字段，那么不会为该字段生成单独的实体类。而是会将该字段合并到基本实体类中。
+            flat：该模型只为每张表生成一个实体类。包含表中所有字段。（推荐使用）
+            hierarchical：如果表有主键，那么该模型会产生一个单独的主键实体类，如果表还有BLOB字段，则会为表生成一个包含所有BLOB字段的单独实体类，其它字段再生成一个实体类，MBG会在生成的实体类间维护一个继承关系
+        targetRuntime：可选，用来指定生成代码样式，可选值：
+            MyBatis3：默认值，会生成Example代码
+            MyBatis3Simple：不会生成Example代码
+        introspectedColumnImpl：可选，用来指定扩展org.mybatis.generator.api.IntrospectedColumn类的实现类
+    -->
+    <context id="mysql" defaultModelType="flat" targetRuntime="MyBatis3">
+        <!--
+        <property>标签，配置0到多个，用于配置数据库分隔符。如mysql的表名为'user_info'。
+        该标签有6个<property>子标签属性：
+            autoDelimitKeywords：自动给关键字添加分隔符，mybatis维护了一个关键字列表，在org.mybatis.generator.internal.db.SqlReservedWords类
+            beginningDelimiter：分隔符开始
+            endingDelimiter：分隔符结束
+            javaFileEncoding：设置java文件编码，如GBK或UTF-8
+            javaFormatter：不常用
+            xmlFormatter：不常用
+        -->
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+        <property name="javaFileEncoding" value="UTF-8"/>
+
+        <!--
+        <plugin>标签，用来定义一个插件，用于扩展或修改通过MBG生成的代码，插件按配置顺序执行。
+        该标签只有1个属性：
+            type：插件的全限定名称
+
+        配置缓存插件，配置如下：
+        <plugin type="org.mybatis.generator.plugins.CachePlugin">
+            <property name="cache_eviction" value="LRU"/>
+            <property name="cache_size" value="1024"/>
+        </plugin>
+        -->
+
+        <!--
+        <commentGenerator>标签，用来配置如何生成注释，最多可配置一个。
+        该标签只有1个属性：
+            type：可以指定用户自定义的注释实现类，该类必须实现com.mybatis.generator.api.CommentGenerator接口，而且必须有一个空构造函数。
+                默认值为DEFAULT，使用默认的注释实现类org.mybatis.generator.internal.DefaultCommentGenerator，
+        该标签有3个可选的<property>子标签属性:
+            suppressAllComments：阻止生成注释，默认为false
+            suppressDate：阻止生成的注释包含时间戳，默认false
+            addRemarkComments：注释是否包含数据库表的备注信息，默认false
+        -->
+        <commentGenerator type="com.mybatis.demo.generator.MyCommentGenerator">
+            <property name="suppressAllComments" value="false"/>
+            <property name="suppressDate" value="true"/>
+            <property name="addRemarkComments" value="true"/>
+        </commentGenerator>
+
+        <!--
+        <jdbcConnection>标签用于指定MBG要连接的数据库信息，必须配置，只能配置一个。
+        该标签有4个属性：
+            driverClass：数据库驱动的完全限定类名（必选），如“com.mysql.jdbc.Driver”
+            connectionURL：数据库连接的URL（必选），如“jdbc:mysql://127.0.0.1/mybatis”
+            userId：连接用户名（可选）
+            password：连接密码（可选）
+         -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.33.10:3306/mybatis?autoReconnect=true&amp;useUnicode=true&amp;character_set_server=utf8mb4&amp;useSSL=false"
+                        userId="hancock"
+                        password="123456">
+        </jdbcConnection>
+
+        <!--
+        <javaTypeResolver>标签用于指定JDBC类型与Java类型转换关系，最多配置一个。
+        该标签只有1个属性
+            type：默认值为DEFAULT，一般情况下使用默认即可。需要特殊处理的可以通过其它标签配置解决，不建议修改该属性。
+        默认的转换规则如下：
+            如果精度>0或者长度>18，转为java.math.BigDecimal
+            如果精度=0且10<=长度<=18，转为java.lang.Long
+            如果精度=0且5<=长度<=9，转为java.math.Integer
+            如果精度=0且长度<5，转为java.math.Short
+        该标签的有1个个可以配置的<property>子标签属性：
+            forceBigDecimals，该 属性可以控制是否强制将DECIMAL和NUMERIC类型的JDC字段转为Java的BigDecimal，默认为false。一般不需要配置。
+         -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!--
+        <javaModelGenerator>标签用来控制生成实体类，
+        该标签有2个必选属性:
+            targetPackage：生成实体类存放的包名。
+            targetProject：指定目标项目的路径，可以使用相对路径或绝对路径。
+        该标签还支持5个<property>子标签属性：
+            constructorBased：该属性只对Mybatis3有效，如果是true就会使用构造方法入参，false则使用setter方式，默认false
+            enableSubPackages：如果是true，MBG会根据catalog和schema来生成子包。false则使用targetPackage属性。默认false
+            immutable：用来配置实体类属性是否可变。如果为true，则忽略constructorBased属性，都会用构造方法入参，不会生成setter方法。默认false
+            rootClass：设置所有实体类的基类。如果设置，则需要使用类的全限定名称。如果MBG能够加载rootClass，那么不会覆盖和父类完全匹配的属性。匹配规则：
+                属性名完全相同
+                属性类型相同
+                属性有getter方法
+                属性有setter方法
+            trimStrings：判断是否对数据库查询结果进行trim操作，默认值为false。如果为true，则会生成如下代码：
+                public void setUserName(String userName) {
+                    this.userName = userName == null ? null : userName.trim();
+                }
+        -->
+        <javaModelGenerator targetPackage="com.mybatis.demo.rbac.entity" targetProject="src\main\java">
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="false"/>
+        </javaModelGenerator>
+
+        <!--
+        <sqlMapGenerator>标签用于配置SQL映射生成器(Mapper.xml)的属性。该标签可选，最多配置一个。如果targetRuntime=“Mybatis3”，
+        则只有当<javaClientGenerator>标签设置需要XML时，该标签才需要配置一个。如果没有配置<javaClientGenerator>标签，则使用以下规则：
+            如果配置了一个<sqlMapGenerator>标签，那么MBG将只生成XML的SQL映射文件和实体。
+            如果没有配置<sqlMapGenerator>标签，那么MBG只生成实体类。
+        该标签有2个必选属性：
+            targetPackage：生成mapper.xml文件存放的包名。
+            targetProject：指定目标项目的路径，可以使用相对路径或绝对路径。
+        该标签还有一个可选的<property>子标签属性：
+            enableSubPackages：如果是true，MBG会根据catalog和schema来生成子包。false则使用targetPackage属性。默认false
+        -->
+        <sqlMapGenerator targetPackage="com.mybatis.demo.rbac.mapper1" targetProject="src\main\resources"/>
+
+        <!--
+        <javaClientGenerator>标签，用于配置生成Mapper接口的信息。该标签可选，最多配置一个。如果不配置则不生成Mapper接口
+        该标签有3个必选属性：
+            type：用于指定Mapper接口生成器。用户可自定义实现，需要继承org.mybatis.generator.codegen.AbstractJavaClientGenerator类。
+                必须有一个默认空的构造器。该属性提供了预设的代码生成器，首先根据<context>标签的targetRuntime属性分为两类：
+                    Mybatis3:
+                        ANNOTATEDMAPPER：基于注解的Mapper接口，不会有对应的XML映射文件。
+                        MIXEDMAPPER：XML和注解的混合形式。上面这种情况中的SQL Provider注解方法会被XML方式替代。
+                        XMLMAPPER：所有的方法都在XML中，接口调用依赖XML文件。（推荐使用）
+                    Mybatis3Simple:
+                        ANNOTATEDMAPPER：基于注解的Mapper接口，不会有对应的XML映射文件。
+                        XMLMAPPER：所有的方法都在XML中，接口调用依赖XML文件。（推荐使用）
+            targetPackage：生成Mapper接口存放的包名。
+            targetProject：指定目标项目的路径，可以使用相对路径或绝对路径。
+            implementationPackage：可选，如果为true，Mapper接口的实现类就会生成在这个属性指定的包中。
+        该标签还支持几个<property>属性，由于不常用，不做介绍。
+            具体见：http://www.mybatis.org/generator/configreference/javaClientGenerator.html
+        -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.mybatis.demo.rbac.mapper1"
+                             targetProject="src\main\java"/>
+
+        <!--
+        <table>标签是最重要的一个标签，该标签用于配置需要生成的数据库表。该标签至少需要配置一个，可配置多个。
+        该标签有以下属性：
+            tableName：必选。指定要生成的表名，如果生成全表则用“%”表示。可以使用SQL通配符匹配多张表。
+            schema：可选。数据库的schema。如果设置了该属性，则生成SQL的表名为schema.tableName
+            catalog：可选。数据库的catalog。如果设置了该属性，则生成SQL的表名为catalog.tableName（并非所有数据库都支持catalog）
+            alias：可选。别名。如果指定了该属性，则生成的SQL列名会加上该别名，如alias_userName
+            domainObjectName：可选。生成对象的基本名称，如果没有指定，MBG会自动根据表名来生成名称。
+            其它属性见http://www.mybatis.org/generator/configreference/table.html
+        <generatedKey>子标签，用来指定自动生成主键的属性，如果指定该属性，MBG会在生成的insert的SQL映射文件中插入一个<selectKey>标签，这个标签很重要。
+            该标签有2个必选属性：
+                column：生成列的名称。
+                sqlStatement：返回新值的SQL语句。
+        -->
+        <table
+                tableName="%"
+                enableCountByExample="false"
+                enableUpdateByExample="false"
+                enableDeleteByExample="false"
+                enableSelectByExample="false"
+                selectByExampleQueryId="false"
+        >
+            <generatedKey column="id" sqlStatement="MySql"/>
+        </table>
+    </context>
+</generatorConfiguration>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <settings>
+        <setting name="logImpl" value="LOG4J"/>
+        <!-- 延迟加载配置,3.4.5版本默认为false，当为true时<association>标签的fetchType="lazy"无效，要生效必须为false-->
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+
+    <!-- 枚举类型的处理器 -->
+    <typeHandlers>
+        <typeHandler javaType="com.mybatis.demo.rbac.type.Enabled" handler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+    </typeHandlers>
+    <!--环境配置，连接的数据库，这里使用的是MySQL-->
+    <environments default="develop">
+        <environment id="develop">
+            <!--指定事务管理的类型，这里简单使用Java的JDBC的提交和回滚设置-->
+            <transactionManager type="JDBC"/>
+            <!--dataSource 指连接源配置，POOLED是JDBC连接对象的数据源连接池的实现-->
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://192.168.33.10:3306/mybatis?useSSL=false&amp;character_set_server=utf8mb4"/>
+<!--                <property name="url" value="jdbc:mysql://192.168.33.10:3306/mybatis?useSSL=false&amp;characterEncoding=utf8"/>-->
+                <property name="username" value="hancock"/>
+                <property name="password" value="123456"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <!--这是告诉Mybatis区哪找持久化类的映射文件，对于在src下的文件直接写文件名，            如果在某包下，则要写明路径,如：com/mybatistest/config/User.xml-->
+        <package name="com.mybatis.demo.rbac.mapper"/>
+    </mappers>
+</configuration>
